@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -26,7 +27,19 @@ function App() {
 
 
   return (
-    <div className="App flex flex-col bg-teal-500 dark:bg-[#1a0d0c] h-[100vh] text-black dark:text-white p-2">
+    <div className="App flex flex-col bg-teal-500 dark:bg-[#1a0d0c] min-h-[100vh] max-h-fit text-black dark:text-white p-2">
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <button className=' flex rounded-xl ring-2 ring-black dark:ring-white p-3 self-end ' onClick={() => { 
           setDarkmode(!darkmode)
        }} >

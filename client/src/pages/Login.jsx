@@ -12,15 +12,17 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        console.log("render-----")
         console.log(formData)
         axios.post('http://localhost:8081/login', formData)
             .then((res) =>{
                 // console.log(res.data.status)
                 
                 if (res.data.status === 'success'){
-                    navigate('/')
+                    localStorage.setItem('justLoggedIn', true)
+                    navigate('/', {replace: true}) // Replace the current route(login) with the new route(home"/") instead of adding a new entry
                 }else{
-                    alert('Hey! big man, who are you for real bruv🤨')
+                    alert('Hey big man!, who are you for real bruv🤨')
                 }
             })
             .catch(err => console.log(err))
@@ -32,7 +34,7 @@ function Login() {
     return(
         <div className=" flex flex-col gap-2 " >
             <h1>Sign-In</h1>
-            <form className=" flex flex-col gap-2 ring-2 ring-black rounded-xl p-2 " onSubmit={handleSubmit} >
+            <form className=" flex flex-col gap-2 ring-2 ring-black rounded-xl p-2 dark:text-black " onSubmit={handleSubmit} >
                 <label className=" overflow-hidden p-2 bg-[#343b39] rounded-lg " htmlFor="email">
                     <input required className="w-80 rounded-lg p-2"
                         onChange={(e) => 
@@ -61,18 +63,20 @@ function Login() {
                 <span>
                     Thank you for visting, we are glad you came back!.
                 </span>
+            </form>
+            <div>
                 <button 
-                    onClick={()=>{
-                        navigate('/register')
-                    }} 
-                    className=" dark:text-black dark:bg-teal-500 p-2 bg-white rounded-lg hover:bg-transparent hover:ring-2 hover:ring-white " 
-                >
-                    Create Account
+                        onClick={()=>{
+                            navigate('/register')
+                        }} 
+                        className=" dark:text-black dark:bg-teal-500 p-2 bg-white rounded-lg hover:bg-transparent hover:ring-2 hover:ring-white " 
+                    >
+                        Create Account
                 </button>
                 <small className=" ml-2 text-red-500 ">
                     Have an account with us?, sign up here🫰🏾
                 </small>
-            </form>
+            </div>
         </div>
     )
  };

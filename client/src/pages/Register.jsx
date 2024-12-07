@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 
 function Register() { 
@@ -17,7 +17,7 @@ function Register() {
         axios.post('http://localhost:8081/register', formData)
             .then((res) =>{
                 if (res.status === 'success'){
-                    navigate('/login')
+                    navigate('/login', {replace: true})
                 }else{
                     alert('Hey! big man, response has tanked bruv')
                 }

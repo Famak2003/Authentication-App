@@ -21,7 +21,7 @@ const app = express();
 //middleWears
 app.use(express.json());
 app.use(cors({
-    origin: ["http://localhost:3001"],
+    origin: ["http://localhost:3000"],
     methods: ["POST", "GET"],
     credentials: true
 }));
@@ -62,7 +62,7 @@ db.connect((err) => {
 
 // =========== routes =========== //
 
-app.get("/", verifyUser, (req, res) =>{
+app.get("/", verifyUser, (req, res) =>{ // verifies if user is logged in or not
     return res.json({status: "success", name: req.name})
 })
 
@@ -121,7 +121,7 @@ app.post('/login', (req, res) => {
 })
 
 app.get('/logout',(req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('token'); // delete token from the browser
     return res.json({status: "success"})
 })
 
