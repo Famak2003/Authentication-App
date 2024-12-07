@@ -28,15 +28,16 @@ app.use(cors({
 app.use(cookieParser())
 
 const verifyUser = (req, res, next) => {
-    const token = req.cookies.token; 
-    if (!token){ // Checks is there is a token form the browser
+    const token = req.cookies.token; // gets cookie's token from the client
+    if (!token){ // Checks if there is a token from the browser
         return res.json({Error: "You are Not authorised"})
     }else{ // Checks if there token is the one created by this app
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err){
-                return res.json({Error: "Token not found your not a registered user"})
+                return res.json({Error: "Token not found you're not a registered user"})
             } else {
                 req.name = decoded.name
+                console.log("Decoded name", decoded)
                 next();
             }
         })
@@ -100,15 +101,15 @@ app.post('/login', (req, res) => {
             return res.json({err})
         }
         if (data.length > 0) {
-            bcrypt.compare(req.body.password.toString(), data[0].password, (err, response) => {
+            bcrypt.compare(req.body.password.toString(), data[0].password, (err, response) => { // compare inputed passsword from client with the hashed password stored in the database
                 if (err) {
                     return res.status(400).json({Error: 'Password compare error'})
                 }
                 if (response) {
                     console.log("successfully found user on database")
                     const name = data[0].name;
-                    const  token = jwt.sign({name}, process.env.JWT_SECRET, {expiresIn: '1d'})
-                     res.cookie("token", token)
+                    const token = jwt.sign({name}, process.env.JWT_SECRET, {expiresIn: '1d'})
+                    res.cookie("token", token)
                     return res.json({status: 'success'})
                 }else{
                     return res.json({Error: "Password not matched"})
