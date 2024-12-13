@@ -9,6 +9,9 @@ import dotenv from 'dotenv'
 import ip from 'ip'
 import logger from './utils/logger.js'
 
+import AuthModule from './auth/auth.module.js';
+import db from './config/mysql.config.js';
+
 //password hashing
 const  salt = 10;
 
@@ -18,7 +21,6 @@ const PORT = process.env.SERVER_PORT || 3000;
 //initialze app
 const app = express();
 
-//middleWears
 app.use(express.json());
 app.use(cors({
     origin: ["http://localhost:3000"],
@@ -27,72 +29,57 @@ app.use(cors({
 }));
 app.use(cookieParser())
 
-const verifyUser = (req, res, next) => {
-    const token = req.cookies.token; // gets cookie's token from the client
-    if (!token){ // Checks if there is a token from the browser
-        return res.json({Error: "You are Not authorised"})
-    }else{ // Checks if there token is the one created by this app
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-            if (err){
-                return res.json({Error: "Token not found you're not a registered user"})
-            } else {
-                req.name = decoded.name
-                console.log("Decoded name", decoded)
-                next();
-            }
-        })
-    }
-}
+app.use(AuthModule)
+
 
 //db connection
-// const mysql = require('mysql2')
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-})
+// const db = mysql.createConnection({
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME
+// })
 
-db.connect((err) => {
-    if (err) {
-      console.error('Error connecting to the database:', err);
-      return;
-    }
-    console.log('Connected to the database!');
-  });
+// db.connect((err) => {
+//     if (err) {
+//       console.error('Error connecting to the database:', err);
+//       return;
+//     }
+//     console.log('Connected to the database!');
+//   });
 
 // =========== routes =========== //
 
-app.get("/", verifyUser, (req, res) =>{ // verifies if user is logged in or not
-    return res.json({status: "success", name: req.name})
-})
+// app.get("/", verifyUser, (req, res) =>{ // verifies if user is logged in or not
+//     return res.json({status: "success", name: req.name})
+// })
 
-app.post('/register', (req, res)=> {
-    const QUERY = "INSERT INTO login (`name`,`email`,`password`) VALUES (?)";
+// app.post('/register', (req, res)=> {
+//     const QUERY = "INSERT INTO login (`name`,`email`,`password`) VALUES (?)";
 
-    if (!req.body.name || !req.body.email || !req.body.password) {
-        return res.status(400).json({ Error: "Missing required fields" });
-    }
+//     if (!req.body.name || !req.body.email || !req.body.password) {
+//         return res.status(400).json({ Error: "Missing required fields" });
+//     }
 
-    bcrypt.hash(req.body.password.toString(), salt, (err, hash) =>{
-        if (err) {
-            console.error("Hashing error:", err);
-            return res.json({Error: "Error when hashing password"})
-        }
-        const values = [
-            req.body.name,
-            req.body.email,
-            hash
-        ]
-        db.query(QUERY, [values], (err, result)=> {
-            if(err){
-                return res.json({Error: `Database Error ===> ${err}`});
-            }
-            return res.status(200).json({ status: "Success" });
-        })
-    })
+//     bcrypt.hash(req.body.password.toString(), salt, (err, hash) =>{
+//         if (err) {
+//             console.error("Hashing error:", err);
+//             return res.json({Error: "Error when hashing password"})
+//         }
+//         const values = [
+//             req.body.name,
+//             req.body.email,
+//             hash
+//         ]
+//         db.query(QUERY, [values], (err, result) => {
+//             if(err){
+//                 return res.json({Error: `Database Error ===> ${err}`});
+//             }
+//             return res.status(200).json({ status: "Success" });
+//         })
+//     })
     
-})
+// })
 
 app.post('/login', (req, res) => {
     const QUERY = "SELECT * FROM login WHERE email = ?";

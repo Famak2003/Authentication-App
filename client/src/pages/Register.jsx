@@ -16,7 +16,8 @@ function Register() {
         console.log(formData)
         axios.post('http://localhost:8081/register', formData)
             .then((res) =>{
-                if (res.status === 'success'){
+                console.log(res)
+                if (res.status === 200){
                     navigate('/login', {replace: true})
                 }else{
                     alert('Hey! big man, response has tanked bruv')
@@ -31,7 +32,7 @@ function Register() {
     return(
         <div className=" flex flex-col gap-2 " >
             <h1>Sign-Up</h1>
-            <form className=" flex flex-col gap-2 ring-2 ring-black rounded-xl p-2 " onSubmit={handleSubmit} >
+            <form className=" flex flex-col gap-2 ring-2 ring-black rounded-xl p-2 dark:text-black " onSubmit={handleSubmit} >
                 <label className="overflow-hidden p-2 bg-[#343b39] rounded-lg" htmlFor="name">
                     <input required className=" w-80 rounded-lg p-2" 
                         onChange={(e) => 

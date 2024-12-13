@@ -37,7 +37,7 @@ function Home() {
             .catch(err => console.log(err))
         const loggedInFlag = localStorage.getItem("justLoggedIn")
         if (loggedInFlag){
-            toast.success("Wecome back! we're excited to see you again", {autoClose: 3000, position: "top-right", hideProgressBar: false, pauseOnHover: true, transition: Bounce})
+            // toast.success("Wecome back! we're excited to see you again", {autoClose: 3000, position: "top-right", hideProgressBar: false, pauseOnHover: true, transition: Bounce})
             localStorage.removeItem("justLoggedIn")
         }
         console.log(loggedInFlag)
